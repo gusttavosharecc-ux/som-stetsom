@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configurador Stetsom Pro - Gustavo Defalt</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #121212; color: white; padding: 15px; }
+        .card { background: #1e1e1e; padding: 20px; border-radius: 15px; border-top: 6px solid #e63946; max-width: 480px; margin: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.7); }
+        h2 { color: #e63946; text-align: center; text-transform: uppercase; margin-bottom: 20px; letter-spacing: 1px; }
+        
+        label { display: block; margin-top: 12px; font-size: 12px; color: #aaa; font-weight: bold; }
+        input, select { width: 100%; padding: 12px; margin-top: 5px; border-radius: 8px; border: 1px solid #333; background: #2d2d2d; color: white; box-sizing: border-box; }
+        
+        button { width: 100%; padding: 16px; background: #e63946; color: white; border: none; border-radius: 8px; margin-top: 20px; cursor: pointer; font-weight: bold; font-size: 16px; transition: 0.2s; }
+        button:active { transform: scale(0.98); }
+
+        #resultado { margin-top: 25px; display: none; animation: fadeIn 0.5s; }
+        .res-item { background: #2d2d2d; padding: 15px; border-radius: 10px; margin-bottom: 10px; border: 1px solid #444; }
+        .destaque { color: #00f2ff; font-weight: bold; font-size: 18px; }
+        
+        .ligacao-text { background: #383838; padding: 12px; border-left: 4px solid #e63946; margin-top: 10px; font-size: 14px; line-height: 1.5; color: #eee; }
+
+        .btn-whatsapp { background: #25d366; text-decoration: none; display: flex; align-items: center; justify-content: center; height: 50px; border-radius: 8px; color: white; font-weight: bold; margin-top: 15px; }
+        .creditos { text-align: center; margin-top: 30px; border-top: 1px solid #333; padding-top: 20px; }
+        .btn-contato { display: inline-flex; align-items: center; background: #00e676; color: #000 !important; padding: 12px 25px; border-radius: 50px; text-decoration: none; font-weight: bold; margin-top: 10px; }
+        
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>Configurador Stetsom</h2>
+    
+    <label>Tipo de Alto-falante:</label>
+    <select id="tipo">
+        <option value="Subwoofer">Subwoofer (Grave)</option>
+        <option value="Woofer">Woofer (Médio Grave)</option>
+        <option value="Driver">Driver (Corneta)</option>
+        <option value="Tweeter">Super Tweeter</option>
+    </select>
+
+    <div style="display: flex; gap: 10px;">
+        <div style="flex: 1;">
+            <label>Quantidade:</label>
+            <input type="number" id="qtd" value="2">
+        </div>
+        <div style="flex: 1;">
+            <label>Ohms cada:</label>
+            <input type="number" id="imp_falante" value="4">
+        </div>
+    </div>
+
+    <label>Impedância do Módulo (Ohms):</label>
+    <input type="number" id="imp_modulo" value="2">
+
+    <label>Watts RMS (Deste canal):</label>
+    <input type="number" id="potencia" placeholder="Ex: 2000">
+
+    <label>Potência Total do Som (Soma dos Módulos):</label>
+    <input type="number" id="total_rms" placeholder="Ex: 5000">
+
+    <label>Bateria Total Instalada (Ah):</label>
+    <input type="number" id="bateria_atual" placeholder="Ex: 60">
+
+    <button onclick="configurar()">GERAR PROJETO COMPLETO</button>
+
+    <div id="resultado">
+        <div class="res-item">
+            <strong>🎚️ PROCESSADOR STETSOM:</strong><br>
+            Corte: <span id="corte" class="destaque"></span><br>
+            Limiter: <span id="limiter" class="destaque"></span> dBu
+        </div>
+
+        <div class="res-item">
+            <strong>🔌 GUIA DE LIGAÇÃO:</strong>
+            <div id="guia_texto" class="ligacao-text"></div>
+        </div>
+
+        <div class="res-item">
+            <strong>🔋 ENERGIA:</strong><br>
+            <span id="res_bateria"></span>
+        </div>
+
+        <a id="share-wa" class="btn-whatsapp" href="#" target="_blank">COMPARTILHAR NO WHATSAPP</a>
+    </div>
+
+    <div class="creditos">
+        <p>Desenvolvido por: <strong>Gustavo Defalt</strong></p>
+        <a href="https://wa.me/5533984512784" class="btn-contato" target="_blank">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" width="20" style="margin-right:8px;">
+            CONTATO PROFISSIONAL
+        </a>
+    </div>
+</div>
+
+<script>
+function configurar() {
+    const qtd = parseInt(document.getElementById('qtd').value);
+    const impF = parseFloat(document.getElementById('imp_falante').value);
+    const impM = parseFloat(document.getElementById('imp_modulo').value);
+    const pot = parseFloat(document.getElementById('potencia').value);
+    const totalRMS = parseFloat(document.getElementById('total_rms').value);
+    const batAtual = parseFloat(document.getElementById('bateria_atual').value);
+    const tipo = document.getElementById('tipo').value;
+
+    if (!pot || !totalRMS || !batAtual) { alert("Preencha todos os campos!"); return; }
+
+    // Cálculo Limiter
+    const vRMS = Math.sqrt(pot * (impF/qtd));
+    const dBu = (20 * Math.log10(vRMS / 0.775)).toFixed(1);
+
+    // Cortes
+    let hpf, lpf;
+    switch(tipo) {
+        case 'Subwoofer': hpf = "35Hz"; lpf = "100Hz"; break;
+        case 'Woofer': hpf = "90Hz"; lpf = "400Hz"; break;
+        case 'Driver': hpf = "1200Hz"; lpf = "6000Hz"; break;
+        case 'Tweeter': hpf = "6000Hz"; lpf = "20000Hz"; break;
+    }
+
+    // Lógica de Ligação (Texto apenas)
+    let guia = "";
+    const impFinalParalelo = impF / qtd;
+    const impFinalSerie = impF * qtd;
+
+    if (impFinalParalelo === impM) {
+        guia = `✅ LIGAÇÃO PARALELA: Junte todos os fios POSITIVOS dos ${qtd} falantes e ligue no (+) do módulo. Faça o mesmo com os NEGATIVOS no (-). Isso resulta em ${impFinalParalelo} Ohms.`;
+    } else if (impFinalSerie === impM) {
+        guia = `✅ LIGAÇÃO EM SÉRIE: Ligue o (+) do módulo no (+) do primeiro falante. O (-) do primeiro vai no (+) do segundo, e assim por diante. O (-) do último volta para o (-) do módulo. Resulta em ${impFinalSerie} Ohms.`;
+    } else {
+        guia = `⚠️ ATENÇÃO: A impedância final (${impFinalParalelo} Ohms) não casa com o módulo de ${impM} Ohms. Você terá perda de potência ou risco de queima.`;
+    }
+
+    // Cálculo Bateria
+    const batNec = totalRMS * 0.1; 
+    const falta = batNec - batAtual;
+    const msgBat = falta > 0 ? 
+        `⚠️ Alerta: Faltam aprox. <span class="destaque">${falta.toFixed(0)}Ah</span> de bateria para suprir ${totalRMS}W.` : 
+        "✅ Energia suficiente para o sistema!";
+
+    // Exibir resultados
+    document.getElementById('corte').innerText = `${hpf} a ${lpf}`;
+    document.getElementById('limiter').innerText = dBu;
+    document.getElementById('guia_texto').innerText = guia;
+    document.getElementById('res_bateria').innerHTML = msgBat;
+    document.getElementById('resultado').style.display = 'block';
+
+    // WhatsApp
+    const texto = `*CONFIGURAÇÃO DE SOM - GUSTAVO DEFALT*%0A%0A*Falantes:* ${qtd}x ${tipo}%0A*Corte:* ${hpf}-${lpf}%0A*Limiter:* ${dBu} dBu%0A%0A*Ligação:* ${guia}%0A%0A*Bateria:* ${falta > 0 ? 'Falta ' + falta.toFixed(0) + 'Ah' : 'OK'}`;
+    document.getElementById('share-wa').href = "https://api.whatsapp.com/send?text=" + texto;
+}
+</script>
+</body>
+</html>
