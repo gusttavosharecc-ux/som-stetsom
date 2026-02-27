@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-<head><!-- Google tag (gtag.js) -->
+<head>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-91BNFKJB5H"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -155,8 +155,8 @@ function configurar() {
         `✅ OK! Ligue ${falantesPorModulo} falantes em PARALELO por módulo.` : 
         `⚠️ ERRO: A ligação resulta em ${impResultante} Ohms (Módulo é ${impM} Ohms).`;
 
-    // Bitola do Cabo e Fusível (Cálculo baseado na corrente total)
-    const correnteTotal = potTotalCanal / 10; // Eficiência média de módulos classe D
+    // Bitola do Cabo e Fusível
+    const correnteTotal = potTotalCanal / 10;
     let bitola = "10mm²";
     if (correnteTotal > 200) bitola = "70mm²";
     else if (correnteTotal > 150) bitola = "50mm²";
@@ -165,7 +165,6 @@ function configurar() {
     
     const fusivel = (correnteTotal * 1.2).toFixed(0) + "A";
 
-    // Bateria
     const batNecessaria = potTotalCanal * 0.1;
     const saldo = batA - batNecessaria;
     const msgBat = saldo >= 0 ? `✅ Energia OK!` : `⚠️ Falta bateria! Adicione ${Math.abs(saldo).toFixed(0)}Ah.`;
