@@ -11,15 +11,15 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Configurador Stetsom Pro - Gustavo Defalt</title>
+    <title>Configurador Stetsom Pro - Cálculos de Som Automotivo</title>
     
-    <meta name="description" content="Ferramenta técnica de cálculos de litragem e configuração de som automotivo Stetsom.">
+    <meta name="description" content="Calcule o Limiter dBu, litragem de caixas e fiação para som automotivo Stetsom. Ferramenta gratuita para instaladores.">
     <meta name="author" content="Gustavo Defalt">
     
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔊</text></svg>">
 
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #0a0a0a; color: #fff; padding: 20px; display: flex; justify-content: center; }
+        body { font-family: 'Segoe UI', sans-serif; background: #0a0a0a; color: #fff; padding: 20px; display: flex; flex-direction: column; align-items: center; }
         .card { background: #1a1a1a; padding: 20px; border-radius: 15px; border-top: 5px solid #e63946; width: 100%; max-width: 450px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         h2 { color: #e63946; text-align: center; text-transform: uppercase; margin-bottom: 20px; }
         h3 { color: #00f2ff; font-size: 16px; margin-top: 25px; border-bottom: 1px solid #333; padding-bottom: 5px; }
@@ -31,7 +31,13 @@
         button:hover { background: #ff4d5a; box-shadow: 0 0 15px rgba(230, 57, 70, 0.4); }
         .res-item { background: #252525; padding: 15px; border-radius: 10px; margin-top: 10px; border-left: 4px solid #e63946; font-size: 14px; }
         .destaque { color: #00f2ff; font-weight: bold; }
-        .footer { text-align: center; margin-top: 30px; font-size: 12px; color: #666; }
+        
+        /* Seção de Conteúdo para AdSense */
+        .artigo { max-width: 450px; margin-top: 30px; background: #1a1a1a; padding: 20px; border-radius: 15px; font-size: 14px; line-height: 1.6; color: #ccc; }
+        .artigo h4 { color: #e63946; margin-bottom: 10px; text-transform: uppercase; }
+        
+        .footer { text-align: center; margin-top: 30px; font-size: 12px; color: #666; width: 100%; }
+        .footer a { color: #e63946; text-decoration: none; margin: 0 10px; }
         .dev-name { color: #25d366; font-weight: bold; }
         .btn-whatsapp { text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 12px; border-radius: 8px; color: white; font-weight: bold; margin-top: 10px; font-size: 14px; transition: 0.3s; }
         .btn-share { background: #007bff; }
@@ -95,10 +101,23 @@
     <a href="https://wa.me/5533984531746?text=Olá Gustavo, vim pelo site!" class="btn-whatsapp btn-contact">
         <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp"> CONTATO PROFISSIONAL
     </a>
+</div>
 
-    <div class="footer">
-        Desenvolvido por <span class="dev-name">Gustavo Defalt</span>
-    </div>
+<div class="artigo">
+    <h4>Como configurar seu Processador Stetsom</h4>
+    <p>A configuração correta do <strong>Limiter (dBu)</strong> é o que separa um sistema profissional de um som que queima alto-falantes. O cálculo leva em conta a potência RMS do alto-falante e a impedância final do conjunto.</p>
+    
+    <h4>Cálculo de Litragem e Sintonia</h4>
+    <p>Para obter o grave perfeito, não basta apenas potência. O volume interno bruto da caixa (litragem) deve respeitar os parâmetros Thiele-Small do fabricante. Use nossa calculadora de litros brutos acima para facilitar o projeto da sua caixa acústica.</p>
+    
+    <h4>Importância da Bateria</h4>
+    <p>Para cada 1000W RMS de som, recomendamos no mínimo 100Ah de bateria para evitar quedas de voltagem abaixo de 12.6V, o que causaria distorção e perda de rendimento no seu módulo amplificador.</p>
+</div>
+
+<div class="footer">
+    Desenvolvido por <span class="dev-name">Gustavo Defalt</span><br><br>
+    <a href="paginas/sobre.html">Sobre o Projeto</a> | 
+    <a href="paginas/privacidade.html">Privacidade</a>
 </div>
 
 <script>
@@ -110,20 +129,18 @@
         const tipo = document.getElementById('tipo').value;
 
         if (rms) {
-            const potTotal = qtdFal * rms;
+            const potTotal = (qtdFal * rms);
             const vRms = Math.sqrt(potTotal * 4).toFixed(1);
             const dps = (20 * Math.log10(vRms / 0.775)).toFixed(1);
             
             let ligacao = (qtdFal / qtdMod) === 1 ? "PARALELO (Casamento OK)" : (qtdFal + " Falantes / " + qtdMod + " Módulos");
             
-            const batNec = potTotal * 0.1;
-            const statusBat = bat >= batNec ? "✅ OK" : "⚠️ FALTA BATERIA (" + batNec + "Ah nec.)";
-
-            let corte = tipo === "subwoofer" ? "35Hz a 100Hz" : tipo === "woofer" ? "80Hz a 1000Hz" : "1000Hz a 20000Hz";
+            const batNec = (potTotal / 1000) * 100;
+            const statusBat = bat >= batNec ? "✅ OK" : "⚠️ FALTA BATERIA (" + batNec.toFixed(0) + "Ah nec.)";
 
             document.getElementById('limiter').innerText = vRms + "V / " + dps + " dBu";
             document.getElementById('ligacao').innerText = ligacao;
-            document.getElementById('cabo').innerText = (potTotal > 1000 ? "35mm" : "21mm");
+            document.getElementById('cabo').innerText = (potTotal > 1200 ? "35mm" : "21mm");
             document.getElementById('fusivel').innerText = (potTotal / 10).toFixed(0) + "A";
             document.getElementById('status_bat').innerText = statusBat;
             document.getElementById('res_geral').style.display = "block";
@@ -141,10 +158,8 @@
         }
     }
 
-    // Configura o link de compartilhamento
     document.getElementById('btn-whatsapp-share').href = "https://api.whatsapp.com/send?text=Confira esta Calculadora Stetsom Pro: " + window.location.href;
 </script>
 
 </body>
 </html>
-
