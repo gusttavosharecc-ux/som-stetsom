@@ -11,154 +11,176 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Configurador Stetsom Pro - Cálculos de Som Automotivo</title>
+    <title>Stetsom Config Pro - O Guia do Instalador</title>
     
-    <meta name="description" content="Calcule o Limiter dBu, litragem de caixas e fiação para som automotivo Stetsom. Ferramenta gratuita para instaladores.">
-    <meta name="author" content="Gustavo Defalt">
-    
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔊</text></svg>">
-
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #0a0a0a; color: #fff; padding: 20px; display: flex; flex-direction: column; align-items: center; }
-        .card { background: #1a1a1a; padding: 20px; border-radius: 15px; border-top: 5px solid #e63946; width: 100%; max-width: 450px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        h2 { color: #e63946; text-align: center; text-transform: uppercase; margin-bottom: 20px; }
-        h3 { color: #00f2ff; font-size: 16px; margin-top: 25px; border-bottom: 1px solid #333; padding-bottom: 5px; }
-        label { display: block; margin-top: 12px; font-size: 12px; color: #aaa; }
-        input, select { width: 100%; padding: 12px; margin-top: 5px; border-radius: 8px; border: 1px solid #333; background: #252525; color: #fff; box-sizing: border-box; }
-        .row { display: flex; gap: 10px; }
+        :root { --primary: #e63946; --secondary: #00f2ff; --bg: #0a0a0a; --card: #1a1a1a; --warning: #ffcc00; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: #fff; padding: 15px; display: flex; flex-direction: column; align-items: center; margin: 0; }
+        .card { background: var(--card); padding: 25px; border-radius: 20px; border-top: 6px solid var(--primary); width: 100%; max-width: 480px; box-shadow: 0 15px 35px rgba(0,0,0,0.7); box-sizing: border-box; }
+        h2 { color: var(--primary); text-align: center; margin: 0 0 20px 0; font-size: 22px; letter-spacing: 1px; }
+        h3 { color: var(--secondary); font-size: 15px; margin-top: 30px; border-bottom: 1px solid #333; padding-bottom: 8px; text-transform: uppercase; }
+        label { display: block; margin-top: 15px; font-size: 13px; color: #bbb; font-weight: 600; }
+        input, select { width: 100%; padding: 14px; margin-top: 6px; border-radius: 10px; border: 1px solid #333; background: #252525; color: #fff; box-sizing: border-box; font-size: 15px; transition: 0.3s; }
+        input:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 10px rgba(230,57,70,0.2); }
+        .row { display: flex; gap: 12px; }
         .col { flex: 1; }
-        button { width: 100%; padding: 16px; background: #e63946; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 20px; transition: 0.3s; text-transform: uppercase; }
-        button:hover { background: #ff4d5a; box-shadow: 0 0 15px rgba(230, 57, 70, 0.4); }
-        .res-item { background: #252525; padding: 15px; border-radius: 10px; margin-top: 10px; border-left: 4px solid #e63946; font-size: 14px; }
-        .destaque { color: #00f2ff; font-weight: bold; }
-        
-        /* Seção de Conteúdo para AdSense */
-        .artigo { max-width: 450px; margin-top: 30px; background: #1a1a1a; padding: 20px; border-radius: 15px; font-size: 14px; line-height: 1.6; color: #ccc; }
-        .artigo h4 { color: #e63946; margin-bottom: 10px; text-transform: uppercase; }
-        
-        .footer { text-align: center; margin-top: 30px; font-size: 12px; color: #666; width: 100%; }
-        .footer a { color: #e63946; text-decoration: none; margin: 0 10px; }
-        .dev-name { color: #25d366; font-weight: bold; }
-        .btn-whatsapp { text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 12px; border-radius: 8px; color: white; font-weight: bold; margin-top: 10px; font-size: 14px; transition: 0.3s; }
+        button { width: 100%; padding: 18px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 20px; transition: 0.4s; text-transform: uppercase; font-size: 14px; }
+        .btn-main { background: var(--primary); color: white; }
+        .btn-sec { background: var(--secondary); color: #000; }
+        button:hover { transform: translateY(-2px); opacity: 0.9; }
+        .res-item { background: #222; padding: 18px; border-radius: 12px; margin-top: 15px; border-left: 5px solid var(--primary); line-height: 1.8; animation: slideIn 0.4s ease-out; }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
+        .destaque { color: var(--secondary); font-weight: bold; }
+        .alerta { color: var(--warning); font-size: 12px; font-style: italic; margin-top: 10px; display: block; }
+        .btn-whatsapp { text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 14px; border-radius: 10px; color: white; font-weight: bold; margin-top: 12px; font-size: 14px; }
         .btn-share { background: #007bff; }
         .btn-contact { background: #25d366; }
-        .btn-whatsapp img { width: 22px; height: 22px; }
+        .footer { text-align: center; margin: 40px 0; font-size: 13px; color: #777; }
     </style>
 </head>
 <body>
 
 <div class="card">
-    <h2>STETSOM CONFIG PRO</h2>
+    <h2>🔊 STETSOM CONFIG PRO</h2>
     
-    <label>Tipo de Alto-falante:</label>
+    <label>Tipo de Projeto:</label>
     <select id="tipo">
         <option value="subwoofer">Subwoofer (Grave)</option>
-        <option value="woofer">Woofer (Médio Grave)</option>
-        <option value="driver">Driver/Tweeter</option>
+        <option value="woofer">Woofer (Médio)</option>
+        <option value="driver">Driver (Corneta/Voz)</option>
+        <option value="tweeter">Super Tweeter (Agudos)</option>
     </select>
 
     <div class="row">
         <div class="col">
-            <label>Módulos:</label>
-            <input type="number" id="qtd_mod" value="1">
+            <label>Qtd Falantes:</label>
+            <input type="number" id="qtd_fal" value="2">
         </div>
         <div class="col">
-            <label>Falantes:</label>
-            <input type="number" id="qtd_fal" value="1">
+            <label>Ohms (Cada):</label>
+            <select id="ohms_fal">
+                <option value="2">2 Ohms</option>
+                <option value="4" selected>4 Ohms</option>
+                <option value="8">8 Ohms</option>
+            </select>
         </div>
     </div>
 
-    <label>Watts RMS (Cada):</label>
-    <input type="number" id="rms_unitario" placeholder="Ex: 800">
+    <div class="row">
+        <div class="col">
+            <label>Ligação:</label>
+            <select id="tipo_ligacao">
+                <option value="paralelo">Paralelo</option>
+                <option value="serie">Série</option>
+            </select>
+        </div>
+        <div class="col">
+            <label>RMS (Cada):</label>
+            <input type="number" id="rms_unitario" placeholder="Ex: 800">
+        </div>
+    </div>
 
-    <label>Bateria Instalada (Ah):</label>
-    <input type="number" id="bat_inst" placeholder="Ex: 150">
+    <label>Distância Cabo (Metros):</label>
+    <input type="number" id="distancia" value="1" step="0.5">
 
-    <button onclick="configurar()">Gerar Projeto Completo</button>
+    <button class="btn-main" onclick="configurar()">Gerar Setup Profissional</button>
 
     <div id="res_geral" class="res-item" style="display:none">
-        Limiter: <span id="limiter" class="destaque"></span><br>
-        Ligação: <span id="ligacao" class="destaque"></span><br>
-        Cabo: <span id="cabo" class="destaque"></span> | Fusível: <span id="fusivel" class="destaque"></span><br>
-        Bateria: <span id="status_bat"></span>
+        🎯 <b>Limiter:</b> <span id="limiter" class="destaque"></span><br>
+        🔌 <b>Impedância Final:</b> <span id="imp_final" class="destaque"></span><br>
+        📏 <b>Cabo Recomendado:</b> <span id="cabo" class="destaque"></span><br>
+        🔋 <b>Bateria Mínima:</b> <span id="status_bat" class="destaque"></span>
+        <span id="alerta_extra" class="alerta"></span>
     </div>
 
-    <h3>📦 CÁLCULO DE LITRAGEM DE CAIXA</h3>
+    <h3>📦 CAIXA E SINTONIA (FB)</h3>
     <div class="row">
-        <div class="col"><label>Alt (cm):</label><input type="number" id="alt"></div>
-        <div class="col"><label>Larg (cm):</label><input type="number" id="larg"></div>
-        <div class="col"><label>Prof (cm):</label><input type="number" id="prof"></div>
+        <div class="col"><label>Alt(cm):</label><input type="number" id="alt"></div>
+        <div class="col"><label>Larg(cm):</label><input type="number" id="larg"></div>
+        <div class="col"><label>Prof(cm):</label><input type="number" id="prof"></div>
     </div>
-    <button onclick="calcularLitragem()" style="background:#00f2ff; color:#000;">Calcular Litros</button>
-    <div id="res_litros" class="res-item" style="display:none; border-color:#00f2ff">
-        Volume: <span id="vol_final" class="destaque" style="color:#00f2ff"></span>
+    <div class="row">
+        <div class="col"><label>Dutos (Qtd):</label><input type="number" id="qtd_duto" value="1"></div>
+        <div class="col"><label>Diâm. Duto(pol):</label><input type="number" id="diam_duto" value="3"></div>
+    </div>
+    
+    <button class="btn-sec" onclick="calcularTudoCaixa()">Calcular Caixa</button>
+    
+    <div id="res_caixa" class="res-item" style="display:none; border-color:var(--secondary)">
+        📐 <b>Volume Bruto:</b> <span id="vol_final" class="destaque"></span><br>
+        🎵 <b>Sintonia (Fb):</b> <span id="fb_final" class="destaque"></span>
     </div>
 
-    <a id="btn-whatsapp-share" href="#" class="btn-whatsapp btn-share">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp"> COMPARTILHAR FERRAMENTA
-    </a>
-
-    <a href="https://wa.me/5533984531746?text=Olá Gustavo, vim pelo site!" class="btn-whatsapp btn-contact">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp"> CONTATO PROFISSIONAL
-    </a>
-</div>
-
-<div class="artigo">
-    <h4>Como configurar seu Processador Stetsom</h4>
-    <p>A configuração correta do <strong>Limiter (dBu)</strong> é o que separa um sistema profissional de um som que queima alto-falantes. O cálculo leva em conta a potência RMS do alto-falante e a impedância final do conjunto.</p>
-    
-    <h4>Cálculo de Litragem e Sintonia</h4>
-    <p>Para obter o grave perfeito, não basta apenas potência. O volume interno bruto da caixa (litragem) deve respeitar os parâmetros Thiele-Small do fabricante. Use nossa calculadora de litros brutos acima para facilitar o projeto da sua caixa acústica.</p>
-    
-    <h4>Importância da Bateria</h4>
-    <p>Para cada 1000W RMS de som, recomendamos no mínimo 100Ah de bateria para evitar quedas de voltagem abaixo de 12.6V, o que causaria distorção e perda de rendimento no seu módulo amplificador.</p>
+    <a id="btn-whatsapp-share" href="#" class="btn-whatsapp btn-share">COMPARTILHAR FERRAMENTA</a>
+    <a href="https://wa.me/5533984512784?text=Olá Gustavo, preciso de um projeto de som!" class="btn-whatsapp btn-contact">FALAR COM GUSTAVO DEFALT</a>
 </div>
 
 <div class="footer">
-    Desenvolvido por <span class="dev-name">Gustavo Defalt</span><br><br>
-    <a href="paginas/sobre.html">Sobre o Projeto</a> | 
-    <a href="paginas/privacidade.html">Privacidade</a>
+    Desenvolvido com precisão por <b>Gustavo Defalt</b><br>
+    © 2026 - Tecnologia para Sound Systems
 </div>
 
 <script>
     function configurar() {
-        const qtdMod = parseInt(document.getElementById('qtd_mod').value);
-        const qtdFal = parseInt(document.getElementById('qtd_fal').value);
-        const rms = parseFloat(document.getElementById('rms_unitario').value);
-        const bat = parseFloat(document.getElementById('bat_inst').value);
         const tipo = document.getElementById('tipo').value;
+        const qtdFal = parseInt(document.getElementById('qtd_fal').value);
+        const ohms = parseInt(document.getElementById('ohms_fal').value);
+        const ligacao = document.getElementById('tipo_ligacao').value;
+        const rms = parseFloat(document.getElementById('rms_unitario').value);
+        const dist = parseFloat(document.getElementById('distancia').value);
 
-        if (rms) {
-            const potTotal = (qtdFal * rms);
-            const vRms = Math.sqrt(potTotal * 4).toFixed(1);
-            const dps = (20 * Math.log10(vRms / 0.775)).toFixed(1);
-            
-            let ligacao = (qtdFal / qtdMod) === 1 ? "PARALELO (Casamento OK)" : (qtdFal + " Falantes / " + qtdMod + " Módulos");
-            
-            const batNec = (potTotal / 1000) * 100;
-            const statusBat = bat >= batNec ? "✅ OK" : "⚠️ FALTA BATERIA (" + batNec.toFixed(0) + "Ah nec.)";
+        if (!rms) return alert("Insira a potência RMS!");
 
-            document.getElementById('limiter').innerText = vRms + "V / " + dps + " dBu";
-            document.getElementById('ligacao').innerText = ligacao;
-            document.getElementById('cabo').innerText = (potTotal > 1200 ? "35mm" : "21mm");
-            document.getElementById('fusivel').innerText = (potTotal / 10).toFixed(0) + "A";
-            document.getElementById('status_bat').innerText = statusBat;
-            document.getElementById('res_geral').style.display = "block";
+        let impFinal = ligacao === 'paralelo' ? (ohms / qtdFal) : (ohms * qtdFal);
+        const potTotal = qtdFal * rms;
+        const vRms = Math.sqrt(potTotal * impFinal).toFixed(1);
+        const dbu = (20 * Math.log10(vRms / 0.775)).toFixed(1);
+
+        let bitola = 21;
+        if (potTotal > 1000) bitola = 35;
+        if (potTotal > 2500 || dist > 3) bitola = 50;
+        if (potTotal > 5000) bitola = 70;
+
+        const batNec = (potTotal / 1000) * 100;
+
+        // Lógica de avisos extras por tipo
+        let aviso = "";
+        if (tipo === 'tweeter') {
+            aviso = "⚠️ Super Tweeters são sensíveis. Use capacitor de poliéster e HPF acima de 5000Hz.";
+        } else if (tipo === 'driver') {
+            aviso = "ℹ️ Para Drivers, use HPF recomendado pelo fabricante (geralmente acima de 1000Hz).";
         }
+
+        document.getElementById('limiter').innerText = vRms + "V (" + dbu + " dBu)";
+        document.getElementById('imp_final').innerText = impFinal.toFixed(2) + " Ohms";
+        document.getElementById('cabo').innerText = bitola + "mm²";
+        document.getElementById('status_bat').innerText = batNec.toFixed(0) + " Ah";
+        document.getElementById('alerta_extra').innerText = aviso;
+        document.getElementById('res_geral').style.display = "block";
     }
 
-    function calcularLitragem() {
+    function calcularTudoCaixa() {
         const a = parseFloat(document.getElementById('alt').value);
         const l = parseFloat(document.getElementById('larg').value);
         const p = parseFloat(document.getElementById('prof').value);
+        const qD = parseInt(document.getElementById('qtd_duto').value);
+        const dD = parseFloat(document.getElementById('diam_duto').value);
+
         if (a && l && p) {
             const litros = (a * l * p) / 1000;
-            document.getElementById('vol_final').innerText = litros.toFixed(2) + " Litros Brutos";
-            document.getElementById('res_litros').style.display = "block";
+            const areaDuto = qD * (Math.PI * Math.pow((dD * 2.54)/2, 2));
+            const fb = (7 * Math.sqrt(areaDuto / (litros * 0.1))).toFixed(1);
+
+            document.getElementById('vol_final').innerText = litros.toFixed(2) + " Litros";
+            document.getElementById('fb_final').innerText = fb + " Hz (Aprox.)";
+            document.getElementById('res_caixa').style.display = "block";
         }
     }
 
-    document.getElementById('btn-whatsapp-share').href = "https://api.whatsapp.com/send?text=Confira esta Calculadora Stetsom Pro: " + window.location.href;
+    document.getElementById('btn-whatsapp-share').onclick = function() {
+        const text = encodeURIComponent("Confira esta Calculadora Stetsom Pro: " + window.location.href);
+        window.open("https://api.whatsapp.com/send?text=" + text);
+    };
 </script>
 
 </body>
