@@ -31,9 +31,8 @@
         .res-item { background: #222; padding: 18px; border-radius: 12px; margin-top: 15px; border-left: 5px solid var(--primary); line-height: 1.8; animation: slideIn 0.4s ease-out; }
         @keyframes slideIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
         .destaque { color: var(--secondary); font-weight: bold; }
-        .alerta { color: var(--warning); font-size: 12px; font-style: italic; margin-top: 10px; display: block; }
+        .alerta { color: var(--warning); font-size: 12px; font-style: italic; margin-top: 10px; display: block; font-weight: bold; }
         
-        /* Estilo das novas seções e links */
         .info-section { margin-top: 30px; padding: 15px; background: #151515; border-radius: 12px; font-size: 13px; color: #999; border: 1px solid #222; }
         .info-section b { color: var(--secondary); }
         .nav-links { display: flex; justify-content: center; gap: 15px; margin-top: 20px; border-top: 1px solid #333; padding-top: 15px; }
@@ -152,13 +151,17 @@
         const rms = parseFloat(document.getElementById('rms_unitario').value);
         const dist = parseFloat(document.getElementById('distancia').value);
 
-        if (!rms) return alert("Insira a potência RMS!");
+        if (!rms) return alert("Por favor, insira a potência RMS por falante!");
 
+        // Cálculo de Impedância Real
         let impFinal = ligacao === 'paralelo' ? (ohms / qtdFal) : (ohms * qtdFal);
+        
+        // Cálculo de Tensão (Voltagem) e Decibéis
         const potTotal = qtdFal * rms;
         const vRms = Math.sqrt(potTotal * impFinal).toFixed(1);
         const dbu = (20 * Math.log10(vRms / 0.775)).toFixed(1);
 
+        // Dimensionamento de Cabos
         let bitola = 21;
         if (potTotal > 1000) bitola = 35;
         if (potTotal > 2500 || dist > 3) bitola = 50;
@@ -166,18 +169,38 @@
 
         const batNec = (potTotal / 1000) * 100;
 
+        // --- SISTEMA DE ALERTAS DE SEGURANÇA ---
         let aviso = "";
-        if (tipo === 'tweeter') {
-            aviso = "⚠️ Super Tweeters são sensíveis. Use capacitor de poliéster e HPF acima de 5000Hz.";
-        } else if (tipo === 'driver') {
-            aviso = "ℹ️ Para Drivers, use HPF recomendado pelo fabricante (geralmente acima de 1000Hz).";
+        let corAlerta = "#ffcc00"; // Amarelo padrão (Aviso)
+
+        // Verificação de Impedância Crítica (Risco para o Módulo)
+        if (impFinal < 1) {
+            aviso += "🚨 PERIGO: Impedância abaixo de 1 Ohm! Risco alto de queimar o módulo. <br>";
+            corAlerta = "#ff4444"; // Vermelho para perigo real
         }
+
+        // Verificação de Tensão Elevada (Risco para o Falante)
+        if (vRms > 110) {
+            aviso += "⚠️ ALTA VOLTAGEM: Bobinas sob estresse térmico extremo! <br>";
+        }
+
+        // Orientações por Categoria
+        if (tipo === 'tweeter') {
+            aviso += "📢 Agudos: Use capacitor de poliéster e HPF acima de 5000Hz.";
+        } else if (tipo === 'driver') {
+            aviso += "📢 Voz: Utilize corte HPF adequado para não romper o reparo.";
+        }
+        // ---------------------------------------
 
         document.getElementById('limiter').innerText = vRms + "V (" + dbu + " dBu)";
         document.getElementById('imp_final').innerText = impFinal.toFixed(2) + " Ohms";
         document.getElementById('cabo').innerText = bitola + "mm²";
         document.getElementById('status_bat').innerText = batNec.toFixed(0) + " Ah";
-        document.getElementById('alerta_extra').innerText = aviso;
+        
+        const alertaElem = document.getElementById('alerta_extra');
+        alertaElem.innerHTML = aviso;
+        alertaElem.style.color = corAlerta;
+        
         document.getElementById('res_geral').style.display = "block";
     }
 
