@@ -32,6 +32,14 @@
         @keyframes slideIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
         .destaque { color: var(--secondary); font-weight: bold; }
         .alerta { color: var(--warning); font-size: 12px; font-style: italic; margin-top: 10px; display: block; }
+        
+        /* Estilo das novas seções e links */
+        .info-section { margin-top: 30px; padding: 15px; background: #151515; border-radius: 12px; font-size: 13px; color: #999; border: 1px solid #222; }
+        .info-section b { color: var(--secondary); }
+        .nav-links { display: flex; justify-content: center; gap: 15px; margin-top: 20px; border-top: 1px solid #333; padding-top: 15px; }
+        .nav-links a { color: #888; text-decoration: none; font-size: 13px; transition: 0.3s; }
+        .nav-links a:hover { color: var(--secondary); }
+
         .btn-whatsapp { text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 14px; border-radius: 10px; color: white; font-weight: bold; margin-top: 12px; font-size: 14px; }
         .btn-share { background: #007bff; }
         .btn-contact { background: #25d366; }
@@ -111,6 +119,21 @@
         🎵 <b>Sintonia (Fb):</b> <span id="fb_final" class="destaque"></span>
     </div>
 
+    <div class="info-section">
+        <b>👥 Sobre Nós:</b><br>
+        Desenvolvido por <b>Gustavo Defalt</b> para facilitar a vida de instaladores de som. Unimos tecnologia e paixão por áudio para entregar cálculos precisos.
+    </div>
+
+    <div class="info-section">
+        <b>🔒 Privacidade:</b><br>
+        Seus dados estão seguros. <b>Não coletamos informações</b> inseridas nos campos. Todo o processamento ocorre localmente no seu dispositivo.
+    </div>
+
+    <div class="nav-links">
+        <a href="paginas/sobre.html">📄 Saiba Mais</a>
+        <a href="paginas/privacidade.html">🔒 Política de Privacidade</a>
+    </div>
+
     <a id="btn-whatsapp-share" href="#" class="btn-whatsapp btn-share">COMPARTILHAR FERRAMENTA</a>
     <a href="https://wa.me/5533984512784?text=Olá Gustavo, preciso de um projeto de som!" class="btn-whatsapp btn-contact">FALAR COM GUSTAVO DEFALT</a>
 </div>
@@ -143,7 +166,6 @@
 
         const batNec = (potTotal / 1000) * 100;
 
-        // Lógica de avisos extras por tipo
         let aviso = "";
         if (tipo === 'tweeter') {
             aviso = "⚠️ Super Tweeters são sensíveis. Use capacitor de poliéster e HPF acima de 5000Hz.";
